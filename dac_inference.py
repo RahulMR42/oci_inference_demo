@@ -2,8 +2,9 @@
 # Copyright (c) 2023, Oracle and/or its affiliates.  All rights reserved.
 # This software is dual-licensed to you under the Universal Permissive License (UPL) 1.0 as shown at https://oss.oracle.com/licenses/upl or Apache License 2.0 as shown at http://www.apache.org/licenses/LICENSE-2.0. You may choose either license.
 
-
+import os
 import oci
+import time
 import datetime
 
 
@@ -18,7 +19,7 @@ def chat(args):
         # Auth Config
         # TODO: Please update config profile name and use the compartmentId that has policies grant permissions for using Generative AI Service
         compartment_id = args.compartment_ocid
-        CONFIG_PROFILE = "DEFAULT"
+        CONFIG_PROFILE = os.getenv('OCI_CONFIG_PROFILE',default="DEFAULT")
         config = oci.config.from_file('~/.oci/config', CONFIG_PROFILE)
 
         # Service endpoint
@@ -46,18 +47,26 @@ def chat(args):
         chat_request.top_p = 0.75
         if args.endpoint_ocid:
             chat_detail.serving_mode = oci.generative_ai_inference.models.DedicatedServingMode(endpoint_id=args.endpoint_ocid)
+            eid = args.endpoint_ocid
+            mid = "NA"
         else:
             chat_detail.serving_mode = oci.generative_ai_inference.models.OnDemandServingMode(model_id=args.model_ocid)
+            mid = args.model_ocid
+            eid = "NA"
         chat_detail.chat_request = chat_request
         chat_detail.compartment_id = compartment_id
-        print_details(f"Start of execution- Promt {args.prompt_file}")
-
-        chat_response = generative_ai_inference_client.chat(chat_detail)
-        print_details(f"End of execution- Promt {args.prompt_file}")
-
         if not args.silent:
+            print_details(f"Start of execution- Promt {args.prompt_file}")
+        start = time.time()
+        chat_response = generative_ai_inference_client.chat(chat_detail)
+        end = time.time()
+        
+        if not args.silent:
+            print_details(f"End of execution- Promt {args.prompt_file}")
             print("**************************Chat Result**************************")
             print(vars(chat_response))
+        else:
+            print(f"Prompt: {args.prompt_file}  Duration(s): {end - start} OpcId: {chat_response.headers['opc-request-id']} EndPoint: {eid} ModelId: {mid} ")
 
         
     except Exception as error:
