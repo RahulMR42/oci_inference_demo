@@ -43,5 +43,5 @@ python dac.py  -c "OCID OF OCI COMPARTMENT " -t <MAX TOKEN> -f "promptfile.txt" 
 ### An example of running 100 occurance against 5 prompts such as 1.txt ...5.txt via cloud shell.
 
 ```
-for i in $(seq 1 100); do  for i in $(seq 1 5); do python dac.py  -c "<Compartment OCID>" -e "<Endpoint OCID>" -t 1000 -f "${i}.txt" -t 4000 -s true |tee -a /tmp/output.txt;echo "......------------......."; done; done
+for i in $(seq 1 100); do  for i in $(seq 1 5); do python inference.py  -c "<Compartment OCID>" -e "<Endpoint OCID>" -t 1000 -f "${i}.txt" -t 4000 -s true |tee -a /tmp/output.txt;echo "......------------......."; done; done
 ```
