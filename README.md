@@ -4,8 +4,8 @@ A sample python script to run inference with DAC or On demand
 ### Usage
 
 ```
-$$ python dac_inference.py -h
-usage: dac_inference.py [-h] --compartment_ocid COMPARTMENT_OCID [--model_ocid MODEL_OCID] [--endpoint_ocid ENDPOINT_OCID] [--max_token MAX_TOKEN]
+$$ python inference.py -h
+usage: inference.py [-h] --compartment_ocid COMPARTMENT_OCID [--model_ocid MODEL_OCID] [--endpoint_ocid ENDPOINT_OCID] [--max_token MAX_TOKEN]
                         -prompt_file PROMPT_FILE [-service_region REGION] [-silent_output SILENT]
 
 sort some integers.
